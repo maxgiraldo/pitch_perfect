@@ -41,6 +41,10 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             playSoundsVC.recordedAudio = data
         }
     }
+  
+    func pathToDirectory() -> String {
+      return NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+    }
 
     @IBAction func recordAudio(sender: UIButton) {
         tapToRecord.hidden = true
@@ -48,21 +52,22 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         stopButton.hidden = false
         recordButton.enabled = false
         
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        println(dirPath)
+        let dirPath = self.pathToDirectory()
         let currentDateTime = NSDate()
         let formatter = NSDateFormatter()
         formatter.dateFormat = "ddMMyyyy-HHmmss"
         let recordingName = formatter.stringFromDate(currentDateTime)+".wav"
         let pathArray = [dirPath, recordingName]
         let filePath = NSURL.fileURLWithPathComponents(pathArray)
-        println(filePath)
-        
         var session = AVAudioSession.sharedInstance()
+  
+        // Indicate that audio session will be used for recording and playback
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
         
         audioRecorder = AVAudioRecorder(URL: filePath, settings: nil, error: nil)
         audioRecorder.delegate = self
+
+        // Allows you to get audio gain in decibel (dB) during playing and recording
         audioRecorder.meteringEnabled = true
         audioRecorder.record()
 
