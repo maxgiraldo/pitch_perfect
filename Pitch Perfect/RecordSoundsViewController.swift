@@ -65,6 +65,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         session.setCategory(AVAudioSessionCategoryPlayAndRecord, error: nil)
         
         audioRecorder = AVAudioRecorder(URL: filePath, settings: nil, error: nil)
+      
+        // Set instantiated AVAudioRecorder's delegate to protocol methods specified in this view controller
         audioRecorder.delegate = self
 
         // Allows you to get audio gain in decibel (dB) during playing and recording
